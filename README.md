@@ -1,4 +1,4 @@
-# unjzb
+# jzbtool
 
 A tiny go program for decoding a jzb string into JSON, or encoding JSON into a jzb.
 
