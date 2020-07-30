@@ -48,8 +48,8 @@ jbztool --json '{"name": "Jane" }'
 jbztool -json='{"name": "Jane" }'
 jbztool --json='{"name": "Jane" }'
 // except for the 2 boolean flags, the = is required:
-jbztool -pretty=true -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
-jbztool -pretty=true -color=true -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
+jbztool -pretty=false -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
+jbztool -pretty=false -color=false -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
 ```
 
 ## Gotchas
