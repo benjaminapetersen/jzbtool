@@ -219,34 +219,34 @@ func init() {
 	// note that boolean flags must be provided as -pretty=false or --pretty=false, not --pretty false as 
 	// the existence of the flag alone indicates truthiness.  This is an exception for booleans, other 
 	// flags do not require the equals
-	flag.BoolVar(&jsonPretty, "pretty", false, "if jzb provided, pretty print the JSON output")	
-	flag.BoolVar(&jsonColor, "color", false, "if jzb provided, color the JSON output")	
+	// assuming a jq style output first, but allowing the ability to turn it off
+	flag.BoolVar(&jsonPretty, "pretty", true, "if jzb provided, pretty print the JSON output")	
+	flag.BoolVar(&jsonColor, "color", true, "if jzb provided, color the JSON output")	
 }
 
-func main() {
-	// fail to parse and things go bad
+func main() {	
 	flag.Parse()
-	// leave a blank line before output
+	// leave a blank line before output, just for readability
 	fmt.Println("");
-
+	
 	if(len(jzbInput) != 0) {
 		// original
-		jsonToJzb(jzbInput)
-		return 
-		// if(jsonPretty && jsonColor) {
-		// 	jzbToJsonColorPretty(jzbInput)
-		// 	return
-		// } 
-		// if(jsonPretty) {
-		// 	jzbToJsonPretty(jzbInput)		
-		// 	return
-		// }
-		// jzbToJsonSimple(jzbInput)
-		// // jzbToJson(jzbInput)
-		// return
+		// jzbToJson(jzbInput)
+		// return 
+		if(jsonPretty && jsonColor) {
+			jzbToJsonColorPretty(jzbInput)
+			return
+		} 
+		if(jsonPretty) {
+			jzbToJsonPretty(jzbInput)		
+			return
+		}
+		jzbToJsonSimple(jzbInput)
+		// jzbToJson(jzbInput)
+		return
 	}
-	// turning JSON into jzb doesn't have all the fancy bells :) 
-	if(len(jsonInput) != 0) {
+	
+	if(len(jsonInput) != 0) {				
 		jsonToJzbSimple(jsonInput)
 		// jsonToJzb(jsonInput)
 		return		

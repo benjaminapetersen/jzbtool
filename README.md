@@ -2,6 +2,14 @@
 
 A tiny go program for decoding a jzb string into JSON, or encoding JSON into a jzb.
 
+## Instructions
+
+1. Download the binary for your platform (OSX, Linux)
+2. Install it in your ~/bin dir (or somewhere that lets you easily use it)
+3. Run `jzbtool -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO` to see the json decoded (and pretty printed!) output
+4. Run `jzbtool -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO --color=false --pretty=false` to see the json blob without fancy features
+5. Run `jsbtool -json  '{"name": "Jane"}'` to see the jzb encoded output string
+
 ## Option flags:
 
 ```bash
@@ -20,23 +28,24 @@ A tiny go program for decoding a jzb string into JSON, or encoding JSON into a j
 Note that flags of any of the following format are valid:
 
 ```bash
-jbztool -json {name: "Jane" }
-jbztool --json {name: "Jane" }
-jbztool -json={name: "Jane" }
-jbztool --json={name: "Jane" }
+jbztool -json '{"name": "Jane" }'
+jbztool --json '{"name": "Jane" }'
+jbztool -json='{"name": "Jane" }'
+jbztool --json='{"name": "Jane" }'
 // except for the 2 boolean flags, the = is required:
-jbztool -pretty=true -jbz eJxSqlYCBAAA__8BgQDA
-jbztool -pretty=true -color=true -jbz eJxSqlYCBAAA__8BgQDA
+jbztool -pretty=true -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
+jbztool -pretty=true -color=true -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
 ```
 
 ## Examples:
 
 ```bash
-jbztool -json {"name": "Jane"} // eJxSqlYCBAAA__8BgQDA
-jbztool -jzb eJxSqlYCBAAA__8BgQDA // { "name": "Jane" }
-jbztool -pretty=true -jzb eJxSqlYCBAAA__8BgQDA // { "name": "Jane" }
+jbztool -json '{"name": "Jane"}' // eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
+jbztool -jzb eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO // { "name": "Jane" }
+jbztool -pretty=true -jzb eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO // { "name": "Jane" }
 ```
 
 ## Gotchas
 
-Remember that `{ "name": "Jane" }` is valid JSON but `{ name: "Jane" }` is not.  The parser expects strict JSON. 
+- Remember that `{ "name": "Jane" }` is valid JSON but `{ name: "Jane" }` and `{ 'name': 'Jane' }` are not.  The parser expects strict JSON. Use double quotes!
+- The cli tool expects the JSON arg passed within single quotes.  For example, `jbztool -json '{"name": "Jane" }'`.
