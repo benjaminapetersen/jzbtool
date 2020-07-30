@@ -2,12 +2,15 @@
 
 A tiny go program for decoding a jzb string into JSON, or encoding JSON into a jzb.
 
+![Example Usage](https://i.imgur.com/v0N9c7m.png)
+
 ## Example Usage:
 
 ```bash
 jbztool -jzb eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO // { "name": "Jane" }
 jbztool -json '{"name": "Jane"}' // eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
 ```
+
 
 ## Instructions
 
