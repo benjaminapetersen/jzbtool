@@ -13,8 +13,8 @@ jbztool -json '{"name": "Jane"}' // eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
 
 ## Download the binary
 
-- [MacOS](binaries/macos/jzbtool)
-- [Linux](binaries/linux/jzbtool)
+- [MacOS](binaries/macos/)
+- [Linux](binaries/linux/)
 
 
 ## Instructions
