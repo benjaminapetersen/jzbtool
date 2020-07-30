@@ -51,3 +51,7 @@ jbztool -pretty=true -color=true -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_A
 
 - Remember that `{ "name": "Jane" }` is valid JSON but `{ name: "Jane" }` and `{ 'name': 'Jane' }` are not.  The parser expects strict JSON. Use double quotes!
 - The cli tool expects the JSON arg passed within single quotes.  For example, `jbztool -json '{"name": "Jane" }'`.
+
+## Credits
+
+[Allan McNaughton](https://github.com/amcnaughton) did all of the real work, I just added the pretty print to the script. 
