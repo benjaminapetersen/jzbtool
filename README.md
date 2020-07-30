@@ -2,6 +2,13 @@
 
 A tiny go program for decoding a jzb string into JSON, or encoding JSON into a jzb.
 
+## Example Usage:
+
+```bash
+jbztool -jzb eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO // { "name": "Jane" }
+jbztool -json '{"name": "Jane"}' // eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
+```
+
 ## Instructions
 
 1. Download the binary for your platform (OSX, Linux)
@@ -35,14 +42,6 @@ jbztool --json='{"name": "Jane" }'
 // except for the 2 boolean flags, the = is required:
 jbztool -pretty=true -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
 jbztool -pretty=true -color=true -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
-```
-
-## Examples:
-
-```bash
-jbztool -json '{"name": "Jane"}' // eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
-jbztool -jzb eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO // { "name": "Jane" }
-jbztool -pretty=true -jzb eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO // { "name": "Jane" }
 ```
 
 ## Gotchas
