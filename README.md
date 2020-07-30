@@ -54,4 +54,4 @@ jbztool -pretty=true -color=true -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_A
 
 ## Credits
 
-[Allan McNaughton](https://github.com/amcnaughton) did all of the real work, I just added the pretty print to the script. 
+[Allan McNaughton](https://github.com/amcnaughton) did all of the real work, I just added the pretty print options. 
