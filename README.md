@@ -41,16 +41,12 @@ If the pretty printing is undesirable, turn it off:
     	if jzb provided, pretty print the JSON output
 ```
 
-Note that flags of any of the following format are valid:
+Note that boolean flags require `=` (ordinary string flags do not) and must come before the jzb/JSON argument:
 
 ```bash
-jbztool -json '{"name": "Jane" }'
-jbztool --json '{"name": "Jane" }'
-jbztool -json='{"name": "Jane" }'
-jbztool --json='{"name": "Jane" }'
 // except for the 2 boolean flags, the = is required:
-jbztool -pretty=false -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
-jbztool -pretty=false -color=false -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
+jbztool -pretty=false eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
+jbztool -pretty=false -color=false eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
 ```
 
 ## Gotchas
