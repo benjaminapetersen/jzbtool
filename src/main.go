@@ -8,8 +8,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/url"
 	"os"
-	"strings"	
+	"strings"
 	"flag"
 	// third party
 	// pretty print, something like jq
@@ -18,10 +19,10 @@ import (
 )
 
 var (
-	jzbInput string 
-	jsonInput string 
-	jsonPretty bool 
-	jsonColor bool	
+	// jzbInput string
+	// jsonInput string
+	jsonPretty bool
+	jsonColor bool
 )
 
 
@@ -193,7 +194,7 @@ func jzbToJsonPretty(jzb string) {
 		fmt.Printf("%s\n", result)
 	}
 }
-// this is a little copy-pasta 
+// this is a little copy-pasta
 func jzbToJsonColorPretty(jzb string) {
 	jzb = convertToUrlSafe(jzb)
 	var orig interface{}
@@ -208,50 +209,128 @@ func jzbToJsonColorPretty(jzb string) {
 	}
 }
 
-func init() {
-	const (
-		defaultJZB = ""
-		defaltJSON = ""		
-	)
-	flag.StringVar(&jzbInput, "jzb", "", "pass in jzb as a string to decode it to JSON")
-	flag.StringVar(&jzbInput, "jbz", "", "oops! its jzb, but we got your back. pass in jbz, we will assume you meant jzb and will also decode it to JSON")
-	flag.StringVar(&jsonInput, "json", "", "pass in JSON as a string to encode it to jzb")	
-	// note that boolean flags must be provided as -pretty=false or --pretty=false, not --pretty false as 
-	// the existence of the flag alone indicates truthiness.  This is an exception for booleans, other 
-	// flags do not require the equals
-	// assuming a jq style output first, but allowing the ability to turn it off
-	flag.BoolVar(&jsonPretty, "pretty", true, "if jzb provided, pretty print the JSON output")	
-	flag.BoolVar(&jsonColor, "color", true, "if jzb provided, color the JSON output")	
+func isJSONString(s string) bool {
+	var js string
+	return json.Unmarshal([]byte(s), &js) == nil
+
 }
 
-func main() {	
-	flag.Parse()
+func isJSON(s string) bool {
+	var js map[string]interface{}
+	return json.Unmarshal([]byte(s), &js) == nil
+
+}
+
+func isValidUrl(toTest string) bool {
+	_, err := url.ParseRequestURI(toTest)
+	if err != nil {
+		return false
+	}
+
+	u, err := url.Parse(toTest)
+	if err != nil || u.Scheme == "" || u.Host == "" {
+		return false
+	}
+
+	return true
+}
+
+func pluckJZBFromQuery(toTest string) string {
+	val, _ := url.ParseQuery(toTest)
+	// ignore jzb/jbz human error, the URL should be built by machines
+	return val["jzb"][0]
+}
+
+
+func processAndPrintJZB(toProcess string) {
 	// leave a blank line before output, just for readability
-	fmt.Println("");
-	
-	if(len(jzbInput) != 0) {
-		// original
-		// jzbToJson(jzbInput)
-		// return 
-		if(jsonPretty && jsonColor) {
-			jzbToJsonColorPretty(jzbInput)
-			return
-		} 
-		if(jsonPretty) {
-			jzbToJsonPretty(jzbInput)		
+	fmt.Println("")
+	if len(toProcess) != 0 {
+		if jsonPretty && jsonColor {
+			jzbToJsonColorPretty(toProcess)
 			return
 		}
-		jzbToJsonSimple(jzbInput)
-		// jzbToJson(jzbInput)
+		if jsonPretty {
+			jzbToJsonPretty(toProcess)
+			return
+		}
+		jzbToJsonSimple(toProcess)
+	}
+}
+
+
+func init() {
+	//const (
+	//	defaultJZB = ""
+	//	defaultJSON = ""
+	//)
+	// no reason to need these flags anymore, they are the default behavior
+	// flag.StringVar(&jzbInput, "jzb", "", "pass in jzb as a string to decode it to JSON")
+	// flag.StringVar(&jzbInput, "jbz", "", "oops! its jzb, but we got your back. pass in jbz, we will assume you meant jzb and will also decode it to JSON")
+	// flag.StringVar(&jsonInput, "json", "", "pass in JSON as a string to encode it to jzb")
+
+	// note that boolean flags must be provided as -pretty=false or --pretty=false, not --pretty false as
+	// the existence of the flag alone indicates truthiness.  This is an exception for booleans, other
+	// flags do not require the equals
+	// assuming a jq style output first, but allowing the ability to turn it off
+	flag.BoolVar(&jsonPretty, "pretty", true, "optionally turn off pretty printing")
+	flag.BoolVar(&jsonColor, "color", true, "optionally turn off color when pretty printing")
+}
+
+func main() {
+	flag.Parse()
+
+	// we should get one single arg. flag.Args() is better than os.Args in that it
+	// cleans out the flags and returns what wemains (and drops the program name itself)
+	arguments := flag.Args()
+
+	// first arg is the program itself
+	// second should be our string
+	if len(arguments) == 0 {
+		// leave a blank line before output, just for readability
+		fmt.Println("")
+		fmt.Fprintln(os.Stderr, "no input provided. please provide an input, for example:")
+		fmt.Println("  jzbtool eJxSUgIEAAD__wBoAEU")
+		fmt.Println("  jzbtool '{\"name\": \"Jane\"}'")
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
+	argument := arguments[0]
+
+	// 1. if its json, encode the jzb and print it
+	if isJSON(argument) {
+		// fmt.Println("Processing as JSON")
+		jsonToJzbSimple(argument)
 		return
 	}
-	
-	if(len(jsonInput) != 0) {				
-		jsonToJzbSimple(jsonInput)
-		// jsonToJzb(jsonInput)
-		return		
+
+	// 2. if its a URL, pluck the jzb, then do the jzb decoding
+	if isValidUrl(argument) {
+		// fmt.Println("Processing as URL")
+		jzbStr := pluckJZBFromQuery(argument)
+		processAndPrintJZB(jzbStr)
+		return
 	}
-	fmt.Fprintln(os.Stderr, "no input provided. please provide from the following:")
-	flag.PrintDefaults()	
-	os.Exit(1)
+
+	// 3. otherwise, treat whatever string we get as a JZB and attempt to decode it.
+	// fmt.Println("Processing string as a JZB")
+	processAndPrintJZB(argument)
 }
+
+
+
+// to manually test:
+// go run main.go 'https://www.helloworld.com?foo=bar&jzb=eJxSqo5RykvMTY1RslKIUfJKzEuNUapVAgQAAP__TdEGrg' 	// pretty prints {"name": "Jane"}
+// go run main.go eJxSqo5RykvMTY1RslKIUfJKzEuNUapVAgQAAP__TdEGrg 											// pretty prints {"name": "Jane"}
+// go run main/go '{"name": "Jane"}' 																		// prints eJxSqo5RykvMTY1RslKIUfJKzEuNUapVAgQAAP__TdEGrg
+// go run main.go eJxSqo5RykvMTY1RslKIUfJKzEuNUapVAgQAAP__TdEGrg 											// pretty prints {"name": "Jane"}
+// go run main.go eJxSqo5RykvMTY1RslKIUfJKzEuNUapVAgQAAP__TdEGrg --color=false
+// go run main.go --pretty=false --color=false eJxSqo5RykvMTY1RslKIUfJKzEuNUapVAgQAAP__TdEGrg
+// go run main.go -pretty=false -color=false eJxSqo5RykvMTY1RslKIUfJKzEuNUapVAgQAAP__TdEGrg
+// go run main.go -color=false eJxSqo5RykvMTY1RslKIUfJKzEuNUapVAgQAAP__TdEGrg
+// will not work:
+// must have = for bool flags:
+//   go run main.go -pretty false -color false eJxSqo5RykvMTY1RslKIUfJKzEuNUapVAgQAAP__TdEGrg
+// flags must come before args:
+//   go run main.go eJxSqo5RykvMTY1RslKIUfJKzEuNUapVAgQAAP__TdEGrg -pretty=false -color=false

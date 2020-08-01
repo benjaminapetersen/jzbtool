@@ -2,13 +2,19 @@
 
 A tiny go program for decoding a jzb string into JSON, or encoding JSON into a jzb.
 
-![Example Usage](https://i.imgur.com/v0N9c7m.png)
+![Example Usage](https://i.imgur.com/mmUpEPg.png)
 
 ## Example Usage:
 
 ```bash
-jbztool -jzb eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO // { "name": "Jane" }
-jbztool -json '{"name": "Jane"}' // eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
+# pass a jzb encoded string
+jbztool eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO // { "name": "Jane" }
+# pass a URL with a jzb encoded string
+jzbtool 'https://www.helloworld.com?foo=bar&jzb=eJxSqo5RykvMTY1RslKIUfJKzEuNUapVAgQAAP__TdEGrg'
+# pass JSON to be jzb encoded
+jbztool '{"name": "Jane"}' // eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
+# use flags to turn off pretty printing and color
+eJxSqo5RykvMTY1RslKIUfJKzEuNUapVAgQAAP__TdEGrg -pretty=false -color=false
 ```
 
 ## Download the binary
@@ -26,15 +32,11 @@ jbztool -json '{"name": "Jane"}' // eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I_AaO
 
 ## Option flags:
 
+If the pretty printing is undesirable, turn it off:
+
 ```bash
   -color
     	if jzb provided, color the JSON output
-  -jbz string
-    	oops! its jzb, but we got your back. pass in jbz, we will assume you meant jzb and will also decode it to JSON
-  -json string
-    	pass in JSON as a string to encode it to jzb
-  -jzb string
-    	pass in jzb as a string to decode it to JSON
   -pretty
     	if jzb provided, pretty print the JSON output
 ```
@@ -58,4 +60,4 @@ jbztool -pretty=false -color=false -jbz eJxSqo5RykvMTY1RsopR8krMS41RqlUCBAAA__9I
 
 ## Credits
 
-[Allan McNaughton](https://github.com/amcnaughton) did all of the real work, I just added the pretty print options. 
+[Allan McNaughton](https://github.com/amcnaughton) did all of the real work, I just added the pretty print options.
